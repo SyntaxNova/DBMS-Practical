@@ -153,4 +153,4 @@ vii) Find name of all parts whose color is green.<br>
 viii) Find number of parts supplied by each supplier<br>
 
 
-SPPU SE IT/CS Sample Practical exam questions and answers (2019 pattern)
+SPPU SE IT/CS Sample Practical questions and answers (2019 pattern)
