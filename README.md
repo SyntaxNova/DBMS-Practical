@@ -151,3 +151,6 @@ v) Find the names of suppliers who supply some red parts.<br>
 vi) Find the names of all parts whose cost is more than Rs.250.<br>
 vii) Find name of all parts whose color is green.<br>
 viii) Find number of parts supplied by each supplier<br>
+
+
+SPPU SE IT/CS Sample Practical exam questions and answers (2019 pattern)
