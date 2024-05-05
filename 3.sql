@@ -1,0 +1,11 @@
+--3. For University database execute following queries:
+--Department (dept_name, building, budget)
+--Instructor (inst_id, name, salary, dept_name)
+--Course (course_id, title, credits, dept_name)
+--Teaches (course_id, inst_id)
+-- Create a view to find instructor name and course for instructors in IT
+--department.
+-- Find the names of all instructors whose salary is greater than at least one
+--instructor in biology dept.
+-- Find titles along with department where department must end with “ y ”.
+-- Find the titles along with department name of biology department.

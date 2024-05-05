@@ -1,0 +1,9 @@
+--10. Consider a relational database
+--Supplier (Sid, Sname, address)
+--Parts(Pid, Pname, color)
+--Catalog(Sid, Pid, cost)
+--Write SQL queries for the following:
+--i) Find the names of suppliers who supply some red parts.
+--ii) Find the names of all parts whose cost is more than Rs.250.
+--iii) Find name of all parts whose color is green.
+--iv) Find number of parts supplied by each supplier

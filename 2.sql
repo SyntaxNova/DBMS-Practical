@@ -1,0 +1,11 @@
+--2. For University database execute following queries:
+--Department (dept_name, building, budget)
+--Instructor (inst_id, name, salary, dept_name)
+--Course (course_id, title, credits, dept_name)
+--Teaches (course_id, inst_id)
+-- Find the names of all instructors in Computer dept who have salary
+--greater than 70000.
+-- Create a view using more than two tables.
+-- Find the names of instructors whose names are exactly five characters.
+-- Execute join operations.
+

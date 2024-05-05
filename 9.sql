@@ -1,0 +1,9 @@
+--9. Consider following database:
+--Student (RollNo, Name, Address)
+--Subject (SubCode, SubName)
+--Marks (RollNo, SubCode,Marks)
+--Write following queries in SQL:
+--i) Find average marks of each student, along with the name of student.
+--ii) Find how many students have failed in the subject “DBMS”.
+--iii) Find the number of students who are passed in “ OS”.
+--iv) Find the maximum marks of the subject “TOC”.
