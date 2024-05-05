@@ -8,3 +8,26 @@
 -- Find the details of instructors who are teaching some courses
 -- List all instructors along with the courses that they teach.
 -- List instructors in descending order.
+
+SELECT name
+FROM Instructor
+WHERE dept_name = 'Music' AND salary > 50000;
+
+
+SELECT *
+FROM Instructor
+WHERE inst_id IN (SELECT DISTINCT inst_id FROM Teaches);
+
+
+SELECT Instructor.name, Course.title
+FROM Instructor
+JOIN Teaches ON Instructor.inst_id = Teaches.inst_id
+JOIN Course ON Teaches.course_id = Course.course_id;
+
+
+SELECT *
+FROM Instructor
+ORDER BY name DESC;
+
+
+

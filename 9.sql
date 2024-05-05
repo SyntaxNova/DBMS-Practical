@@ -7,3 +7,24 @@
 --ii) Find how many students have failed in the subject “DBMS”.
 --iii) Find the number of students who are passed in “ OS”.
 --iv) Find the maximum marks of the subject “TOC”.
+
+SELECT Student.Name, AVG(Marks.Marks) AS AverageMarks
+FROM Student
+JOIN Marks ON Student.RollNo = Marks.RollNo
+GROUP BY Student.RollNo, Student.Name;
+
+
+SELECT COUNT(*) AS FailedStudentsCount
+FROM Marks
+WHERE SubCode = 'DBMS' AND Marks < 40;
+
+
+SELECT COUNT(*) AS PassedStudentsCount
+FROM Marks
+WHERE SubCode = 'OS' AND Marks >= 40;
+
+
+SELECT MAX(Marks) AS MaxMarksTOC
+FROM Marks
+WHERE SubCode = 'TOC';
+
