@@ -1,41 +1,49 @@
 --Execute cursor without handler and with handler.
 
 --Without Exception Handler:
-DECLARE
-    CURSOR c_emp IS
-        SELECT empno, ename FROM emp;
-    v_empno emp.empno%TYPE;
-    v_ename emp.ename%TYPE;
+CREATE PROCEDURE cursor_without_handler()
 BEGIN
-    OPEN c_emp;
-    LOOP
-        FETCH c_emp INTO v_empno, v_ename;
-        EXIT WHEN c_emp%NOTFOUND;
-        -- Process the fetched data here
-        DBMS_OUTPUT.PUT_LINE('Employee: ' || v_empno || ', Name: ' || v_ename);
+    DECLARE emp_id INT;
+    DECLARE emp_first_name VARCHAR(50);
+    DECLARE emp_last_name VARCHAR(50);
+
+    DECLARE cur CURSOR FOR SELECT employee_id, first_name, last_name FROM employees;
+    OPEN cur;
+    
+    cursor_loop: LOOP
+        FETCH cur INTO emp_id, emp_first_name, emp_last_name;
+        IF emp_id IS NULL THEN
+            LEAVE cursor_loop;
+        END IF;
+        
+        -- Process data here
     END LOOP;
-    CLOSE c_emp;
+
+    CLOSE cur;
 END;
-/
+
 
 --With Exception Handler:
-DECLARE
-    CURSOR c_emp IS
-        SELECT empno, ename FROM emp;
-    v_empno emp.empno%TYPE;
-    v_ename emp.ename%TYPE;
+CREATE PROCEDURE cursor_with_handler()
 BEGIN
-    OPEN c_emp;
-    LOOP
-        FETCH c_emp INTO v_empno, v_ename;
-        EXIT WHEN c_emp%NOTFOUND;
-        -- Process the fetched data here
-        DBMS_OUTPUT.PUT_LINE('Employee: ' || v_empno || ', Name: ' || v_ename);
+    DECLARE emp_id INT;
+    DECLARE emp_first_name VARCHAR(50);
+    DECLARE emp_last_name VARCHAR(50);
+    DECLARE done BOOLEAN DEFAULT FALSE;
+
+    DECLARE cur CURSOR FOR SELECT employee_id, first_name, last_name FROM employees;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    OPEN cur;
+
+    cursor_loop: LOOP
+        FETCH cur INTO emp_id, emp_first_name, emp_last_name;
+        IF done THEN
+            LEAVE cursor_loop;
+        END IF;
+        
+        -- Process data here
     END LOOP;
-    CLOSE c_emp;
-EXCEPTION
-    WHEN OTHERS THEN
-        DBMS_OUTPUT.PUT_LINE('An error occurred: ' || SQLERRM);
+
+    CLOSE cur;
 END;
-/
 

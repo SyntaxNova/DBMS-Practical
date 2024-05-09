@@ -1,36 +1,33 @@
 --Write a function
 --- which will show the level of the customer whether platinum, gold or silver.
 
---Assumptions : 
---Platinum: Total purchase amount greater than or equal to 10000
---Gold: Total purchase amount greater than or equal to 5000 and less than 10000
---Silver: Total purchase amount less than 5000
 
-CREATE OR REPLACE FUNCTION get_customer_level(
-    p_customer_id   IN customers.customer_id%TYPE
+DELIMITER //
+
+CREATE FUNCTION get_customer_level(
+    p_customer_id INT
 )
-RETURN VARCHAR2
-IS
-    v_total_purchase_amount  NUMBER;
-    v_customer_level        VARCHAR2(10);
+RETURNS VARCHAR(10)
 BEGIN
-    -- Calculate total purchase amount for the customer
-    SELECT SUM(purchase_amount)
-    INTO v_total_purchase_amount
-    FROM purchases
-    WHERE customer_id = p_customer_id;
+    DECLARE v_total_spent DECIMAL(10, 2);
+    DECLARE v_purchase_count INT;
 
-    -- Determine customer level based on total purchase amount
-    IF v_total_purchase_amount >= 10000 THEN
-        v_customer_level := 'Platinum';
-    ELSIF v_total_purchase_amount >= 5000 THEN
-        v_customer_level := 'Gold';
+    -- Get total amount spent by the customer
+    SELECT SUM(amount) INTO v_total_spent FROM orders WHERE customer_id = p_customer_id;
+
+    -- Get the number of purchases made by the customer
+    SELECT COUNT(*) INTO v_purchase_count FROM orders WHERE customer_id = p_customer_id;
+
+    -- Determine the customer level
+    IF v_total_spent >= 10000 OR v_purchase_count >= 10 THEN
+        RETURN 'Platinum';
+    ELSEIF v_total_spent >= 5000 OR v_purchase_count >= 5 THEN
+        RETURN 'Gold';
     ELSE
-        v_customer_level := 'Silver';
+        RETURN 'Silver';
     END IF;
+END //
 
-    -- Return the customer level
-    RETURN v_customer_level;
-END get_customer_level;
-/
+DELIMITER ;
+
 

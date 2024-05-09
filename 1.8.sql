@@ -1,38 +1,42 @@
 --Write a procedure
 --- To perform arithmetic operations.
 
-CREATE OR REPLACE PROCEDURE perform_arithmetic_operations(
-    p_num1 IN NUMBER,
-    p_num2 IN NUMBER
+DELIMITER //
+
+CREATE PROCEDURE perform_arithmetic_operations(
+    IN p_operand1 DECIMAL(10, 2),
+    IN p_operand2 DECIMAL(10, 2),
+    IN p_operator VARCHAR(1),
+    OUT p_result DECIMAL(10, 2)
 )
-IS
-    v_sum NUMBER;
-    v_difference NUMBER;
-    v_product NUMBER;
-    v_quotient NUMBER;
 BEGIN
-    -- Perform arithmetic operations
-    v_sum := p_num1 + p_num2;
-    v_difference := p_num1 - p_num2;
-    v_product := p_num1 * p_num2;
-    
-    -- Check if the second number is not zero to avoid division by zero error
-    IF p_num2 <> 0 THEN
-        v_quotient := p_num1 / p_num2;
-    ELSE
-        v_quotient := NULL;
-    END IF;
-    
-    -- Display the results
-    DBMS_OUTPUT.PUT_LINE('Sum: ' || v_sum);
-    DBMS_OUTPUT.PUT_LINE('Difference: ' || v_difference);
-    DBMS_OUTPUT.PUT_LINE('Product: ' || v_product);
-    
-    IF v_quotient IS NOT NULL THEN
-        DBMS_OUTPUT.PUT_LINE('Quotient: ' || v_quotient);
-    ELSE
-        DBMS_OUTPUT.PUT_LINE('Cannot divide by zero');
-    END IF;
-END perform_arithmetic_operations;
-/
+    CASE p_operator
+        WHEN '+' THEN
+            SET p_result = p_operand1 + p_operand2;
+        WHEN '-' THEN
+            SET p_result = p_operand1 - p_operand2;
+        WHEN '*' THEN
+            SET p_result = p_operand1 * p_operand2;
+        WHEN '/' THEN
+            IF p_operand2 <> 0 THEN
+                SET p_result = p_operand1 / p_operand2;
+            ELSE
+                SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Division by zero';
+            END IF;
+        ELSE
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Invalid operator';
+    END CASE;
+END //
+
+DELIMITER ;
+
+
+-- call
+CALL perform_arithmetic_operations(10, 5, '+', @result);
+SELECT @result; -- Output: 15
+
+CALL perform_arithmetic_operations(10, 5, '/', @result);
+SELECT @result; -- Output: 2
+
+CALL perform_arithmetic_operations(10, 0, '/', @result); -- This will raise an error: Division by zero
 

@@ -2,26 +2,30 @@
 --- that accepts employee number and return the salary status as low, high,
 --based on his salary.
 
-CREATE OR REPLACE FUNCTION get_salary_status(
-    p_empno     IN emp.empno%TYPE
+DELIMITER //
+
+CREATE FUNCTION get_salary_status(
+    p_empno INT
 )
-RETURN VARCHAR2
-IS
-    v_salary    emp.sal%TYPE;
-    v_status    VARCHAR2(10);
+RETURNS VARCHAR(10)
 BEGIN
-    -- Retrieve the salary of the employee
+    DECLARE v_salary DECIMAL(10, 2);
+
+    -- Get the salary of the employee
     SELECT sal INTO v_salary FROM emp WHERE empno = p_empno;
 
-    -- Check salary status
+    -- Determine the salary status
     IF v_salary < 5000 THEN
-        v_status := 'Low';
+        RETURN 'Low';
     ELSE
-        v_status := 'High';
+        RETURN 'High';
     END IF;
+END //
 
-    -- Return the salary status
-    RETURN v_status;
-END get_salary_status;
-/
+DELIMITER ;
+
+
+--To call this function 
+
+SELECT get_salary_status(8001) AS salary_status;
 

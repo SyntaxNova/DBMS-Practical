@@ -6,21 +6,17 @@ CREATE TABLE employees (
     last_name VARCHAR2(50),
     salary NUMBER
 );
-CREATE OR REPLACE TRIGGER log_salary_update
-AFTER UPDATE OF salary ON employees
+DELIMITER //
+
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
 FOR EACH ROW
-DECLARE
-    v_old_salary NUMBER;
-    v_new_salary NUMBER;
 BEGIN
-    v_old_salary := :OLD.salary;
-    v_new_salary := :NEW.salary;
-    
-    DBMS_OUTPUT.PUT_LINE('Old Salary: ' || v_old_salary);
-    DBMS_OUTPUT.PUT_LINE('New Salary: ' || v_new_salary);
-END;
-/
-UPDATE employees
-SET salary = 60000
-WHERE employee_id = 101;
+    -- Example: Log the deletion in a separate table
+    INSERT INTO employee_deletion_log (employee_id, deletion_date)
+    VALUES (OLD.employee_id, NOW());
+END //
+
+DELIMITER ;
+
 

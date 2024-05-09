@@ -3,48 +3,51 @@
 --- will find the largest number among three numbers.
 
 --Function to Determine Even or Odd:
-CREATE OR REPLACE FUNCTION check_even_odd(
-    p_number IN NUMBER
+DELIMITER //
+
+CREATE FUNCTION check_even_or_odd(
+    p_number INT
 )
-RETURN VARCHAR2
-IS
+RETURNS VARCHAR(10)
 BEGIN
-    IF MOD(p_number, 2) = 0 THEN
+    IF p_number % 2 = 0 THEN
         RETURN 'Even';
     ELSE
         RETURN 'Odd';
     END IF;
-END check_even_odd;
-/
+END //
+
+DELIMITER ;
 
 --Function to Find the Largest Number Among Three:
-CREATE OR REPLACE FUNCTION find_largest(
-    p_num1 IN NUMBER,
-    p_num2 IN NUMBER,
-    p_num3 IN NUMBER
+DELIMITER //
+
+CREATE FUNCTION find_largest_number(
+    p_num1 INT,
+    p_num2 INT,
+    p_num3 INT
 )
-RETURN NUMBER
-IS
-    v_max NUMBER;
+RETURNS INT
 BEGIN
-    v_max := GREATEST(p_num1, p_num2, p_num3);
-    RETURN v_max;
-END find_largest;
-/
+    DECLARE v_largest INT;
+    
+    IF p_num1 >= p_num2 AND p_num1 >= p_num3 THEN
+        SET v_largest = p_num1;
+    ELSE IF p_num2 >= p_num1 AND p_num2 >= p_num3 THEN
+        SET v_largest = p_num2;
+    ELSE
+        SET v_largest = p_num3;
+    END IF;
+    
+    RETURN v_largest;
+END //
 
+DELIMITER ;
 
+-- use of funstion 
+-- Check if a number is even or odd
+SELECT check_even_or_odd(5) AS result; -- Output: Odd
 
-DECLARE
-    v_result VARCHAR2(10);
-    v_largest NUMBER;
-BEGIN
-    -- Test check_even_odd function
-    v_result := check_even_odd(7);
-    DBMS_OUTPUT.PUT_LINE('7 is ' || v_result);
-
-    -- Test find_largest function
-    v_largest := find_largest(10, 20, 15);
-    DBMS_OUTPUT.PUT_LINE('Largest number is: ' || v_largest);
-END;
-/
-
+-- Find the largest number among three numbers
+SELECT find_largest_number(10, 20, 15) AS largest_number; -- Output: 20
+ 

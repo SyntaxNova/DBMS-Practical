@@ -1,40 +1,65 @@
 --Problem Statement : 
 --Write a PL/SQL block to calculate the grade of minimum 10 students.
 
-DECLARE
-    v_student_id    NUMBER;
-    v_student_name  VARCHAR2(100);
-    v_marks         NUMBER;
-    v_grade         VARCHAR2(10);
+CREATE TABLE student_marks (
+    student_id INT,
+    name VARCHAR(50),
+    subject VARCHAR(50),
+    marks INT
+);
+
+INSERT INTO student_marks (student_id, name, subject, marks) VALUES (1, 'John', 'Math', 85);
+INSERT INTO student_marks (student_id, name, subject, marks) VALUES (2, 'Alice', 'Math', 75);
+INSERT INTO student_marks (student_id, name, subject, marks) VALUES (3, 'Bob', 'Math', 90);
+
+
+DELIMITER //
+
+CREATE PROCEDURE calculate_grades()
 BEGIN
-    FOR i IN 1..10 LOOP
-        -- Assuming you have a table called 'students' with columns 'student_id', 'student_name', and 'marks'
-        -- and you have stored the data in that table
-        -- You can replace 'students' with your actual table name
-
-        SELECT student_id, student_name, marks
-        INTO v_student_id, v_student_name, v_marks
-        FROM students
-        WHERE ROWNUM <= 10; -- Selecting the first 10 students, you can adjust the condition as per your requirement
-
-        -- Calculate grade based on marks
-        IF v_marks >= 90 THEN
-            v_grade := 'A+';
-        ELSIF v_marks >= 80 THEN
-            v_grade := 'A';
-        ELSIF v_marks >= 70 THEN
-            v_grade := 'B';
-        ELSIF v_marks >= 60 THEN
-            v_grade := 'C';
-        ELSIF v_marks >= 50 THEN
-            v_grade := 'D';
-        ELSE
-            v_grade := 'F';
+    DECLARE student_id INT;
+    DECLARE name_var VARCHAR(50);
+    DECLARE subject_var VARCHAR(50);
+    DECLARE marks_var INT;
+    DECLARE done BOOLEAN DEFAULT FALSE;
+    DECLARE v_student_count INT;
+    DECLARE v_total_marks INT;
+    DECLARE v_average_marks DECIMAL(5, 2);
+    DECLARE v_grade CHAR(1);
+    
+    SELECT COUNT(*) INTO v_student_count FROM student_marks;
+    
+    SELECT SUM(marks) INTO v_total_marks FROM student_marks;
+    
+    SET v_average_marks := v_total_marks / v_student_count;
+    
+    DECLARE cur CURSOR FOR SELECT student_id, name, subject, marks FROM student_marks;
+    
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+    
+    OPEN cur;
+    
+    grade_loop: LOOP
+        FETCH cur INTO student_id, name_var, subject_var, marks_var;
+        IF done THEN
+            LEAVE grade_loop;
         END IF;
-
-        -- Print student information and grade
-        DBMS_OUTPUT.PUT_LINE('Student ID: ' || v_student_id || ', Student Name: ' || v_student_name || ', Marks: ' || v_marks || ', Grade: ' || v_grade);
+        
+        IF marks_var >= v_average_marks THEN
+            SET v_grade := 'A';
+        ELSEIF marks_var >= v_average_marks * 0.7 THEN
+            SET v_grade := 'B';
+        ELSEIF marks_var >= v_average_marks * 0.5 THEN
+            SET v_grade := 'C';
+        ELSE
+            SET v_grade := 'D';
+        END IF;
+        
+        SELECT CONCAT('Grade for ', name_var, ' is ', v_grade) AS result;
     END LOOP;
-END;
-/
+    
+    CLOSE cur;
+END //
+
+DELIMITER ;
 
